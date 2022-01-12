@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import { Disclosure, Switch } from '@headlessui/react'
 import { navigation } from '../configs'
 
-
 // Navbar of the app
 export default function Navbar() {
     // DARK MODE
@@ -79,10 +78,12 @@ export default function Navbar() {
 }
 
 // Links, used both in desktop and mobile view
-const render_links = (navigation: {
-    name: string
-    url: string
-}[]) => {
+const render_links = (
+    navigation: {
+        name: string
+        url: string
+    }[],
+) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const router = useRouter()
 
