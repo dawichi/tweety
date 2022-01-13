@@ -20,32 +20,30 @@ const firebaseConfig = {
 
 // Initialize Firebase
 if (!getApps.length) {
-	const app = initializeApp(firebaseConfig)
-	// const analytics = getAnalytics(app)
+    const app = initializeApp(firebaseConfig)
+    // const analytics = getAnalytics(app)
 }
 
 const auth = getAuth()
 
-const mapUserFromFirebaseAuth = (user: any) =>  ({
-	displayName: user.displayName,
-	username: user.reloadUserInfo.screenName,
-	email: user.email,
-	avatar: user.photoURL,
+const mapUserFromFirebaseAuth = (user: any) => ({
+    displayName: user.displayName,
+    username: user.reloadUserInfo.screenName,
+    email: user.email,
+    avatar: user.photoURL,
 })
 
-export const onAuthStateChange = (setUser) => {
-	return onAuthStateChanged(auth, user => {
-		user
-		? setUser(mapUserFromFirebaseAuth(user))
-		: setUser(null)
-	})
+export const onAuthStateChange = setUser => {
+    return onAuthStateChanged(auth, user => {
+        setUser(user ? mapUserFromFirebaseAuth(user) : null)
+    })
 }
 
 export const loginWithGitHub = async () => {
     const provider = new GithubAuthProvider()
 
     try {
-		// signInWithPopup calls automatically the onAuthStateChange() as callback
+        // signInWithPopup calls automatically the onAuthStateChange() as callback
         const result = await signInWithPopup(auth, provider)
         // This gives you a GitHub Access Token. You can use it to access the GitHub API.
         const credential = GithubAuthProvider.credentialFromResult(result)
@@ -53,7 +51,6 @@ export const loginWithGitHub = async () => {
 
         // The signed-in user info.
         const user = result.user
-
     } catch (err) {
         // Handle Errors here.
         const errorCode = err.code

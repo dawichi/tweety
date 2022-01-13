@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Disclosure } from '@headlessui/react'
 import RenderLinks from './RenderLinks'
 import Toggle from './Toggle'
 
-
 // Navbar of the app
 export default function Navbar(props) {
-
-
     // DARK MODE
     const [darkMode, setDarkMode] = useState(false)
     const theme = darkMode ? 'dark' : 'light'
@@ -36,32 +33,35 @@ export default function Navbar(props) {
 
     // END DARK MODE
 
+    const ProfileImg = () => {
+        if (props.user === undefined) return <div> </div>
+        else if (props.user === null) return <Image src={'/tweety.png'} alt='logo' layout='fill' />
+        else return <Image src={props.user.avatar} alt='avatar' layout='fill' />
+    }
     return (
-        <Disclosure as='nav' className='bg-zinc-800 shadow dark:shadow-zinc-700'>
+        <Disclosure as='nav' className='bg-emerald-300 dark:bg-zinc-800 text-white'>
             {({ open }) => (
                 <>
                     <div className='container-fluid mx-auto px-2 sm:px-6 lg:px-8'>
                         <div className='relative flex items-center justify-between h-16'>
                             <div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
                                 {/* Mobile menu button*/}
-                                <Disclosure.Button className='inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'>
-                                    <span className='sr-only'>Open main menu</span>
+                                <Disclosure.Button className='px-2 py-1 rounded hover:text-white bg-emerald-400 '>
                                     {open ? <i className='bi bi-x-lg'></i> : <i className='bi bi-list'></i>}
                                 </Disclosure.Button>
                             </div>
-                            <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
+                            <div className='flex-1 flex items-center justify-center sm:items-center sm:justify-start h-10'>
                                 <Link href='/' passHref>
-                                    <button className='flex-shrink-0 flex items-center w-11 h-auto relative rounded overflow-hidden'>
-										{ props.user
-											? <Image src={props.user.avatar} alt='avatar' layout='fill' />
-											: <Image src={'/tweety.png'} alt='logo' layout='fill' />
-										}
+                                    <button className='flex-shrink-0 flex items-center w-11 h-10 relative rounded overflow-hidden'>
+                                        <ProfileImg />
                                     </button>
                                 </Link>
                                 <div className='hidden sm:block sm:ml-6'>
                                     <div className='flex space-x-4'>
-										<RenderLinks />
-									</div>
+                                        {props.user === undefined && ''}
+                                        {props.user === null && <h1 className='text-xl'>Welcome to Tweety</h1>}
+                                        {props.user && <RenderLinks />}
+                                    </div>
                                 </div>
                             </div>
                             <div className='absolute right-0 flex'>
@@ -76,15 +76,10 @@ export default function Navbar(props) {
                     </div>
 
                     <Disclosure.Panel className='sm:hidden'>
-                        <div className='px-2 pt-2 pb-3 space-y-1'>
-							<RenderLinks />
-						</div>
+                        <div className='px-2 pt-2 pb-3 space-y-1'>{props.user && <RenderLinks />}</div>
                     </Disclosure.Panel>
                 </>
             )}
         </Disclosure>
     )
 }
-
-
-

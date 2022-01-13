@@ -1,18 +1,21 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { Footer, Navbar } from '../components'
-import { styles } from '../styles/styles.config'
+import { UsersContext } from 'hooks/userContext'
+import { User } from 'configs/interfaces'
+import { styles } from 'styles/styles.config'
+import { Footer, Navbar } from 'components'
 import 'tailwindcss/tailwind.css'
-import '../styles/global.scss'
-import { User } from '../configs/interfaces'
-import { UsersContext } from '../hooks/userContext'
+import 'styles/global.scss'
+import { onAuthStateChange } from 'configs/firebase/client'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+    // App context
+    const [user, setUser] = useState<User>()
 
-	// App context
-	const [user, setUser] = useState<User>()
-	console.log(user)
+    useEffect(() => {
+        onAuthStateChange(setUser)
+    }, [setUser])
 
     return (
         <>
@@ -27,13 +30,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </Head>
 
             <header style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-				<Navbar user={user} />
+                <Navbar user={user} />
             </header>
 
             <main className={`pb-20 dark:text-white min-h-screen ${styles.background}`}>
-				<UsersContext.Provider value={{ user, setUser }}>
-	                <Component {...pageProps} />
-				</UsersContext.Provider>
+                <UsersContext.Provider value={{ user, setUser }}>
+                    <Component {...pageProps} />
+                </UsersContext.Provider>
             </main>
 
             <Footer />

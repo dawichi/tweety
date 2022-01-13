@@ -1,6 +1,4 @@
-import React from 'react'
 import { Switch } from '@headlessui/react'
-
 
 // Toggle to switch between dark and light mode
 const Toggle = ({ darkMode, setDarkMode }) => {
