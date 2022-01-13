@@ -12,6 +12,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
 	// App context
 	const [user, setUser] = useState<User>()
+	console.log(user)
 
     return (
         <>
@@ -26,7 +27,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </Head>
 
             <header style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-                <Navbar />
+				<Navbar user={user} />
             </header>
 
             <main className={`pb-20 dark:text-white min-h-screen ${styles.background}`}>

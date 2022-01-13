@@ -24,6 +24,7 @@ if (!getApps.length) {
 	// const analytics = getAnalytics(app)
 }
 
+const auth = getAuth()
 
 const mapUserFromFirebaseAuth = (user: any) =>  ({
 	displayName: user.displayName,
@@ -32,19 +33,19 @@ const mapUserFromFirebaseAuth = (user: any) =>  ({
 	avatar: user.photoURL,
 })
 
-export const onAuthStateChange = (onChange) => {
-    const auth = getAuth()
+export const onAuthStateChange = (setUser) => {
 	return onAuthStateChanged(auth, user => {
-		const normalizedUser = mapUserFromFirebaseAuth(user)
-		onChange(normalizedUser)
+		user
+		? setUser(mapUserFromFirebaseAuth(user))
+		: setUser(null)
 	})
 }
 
 export const loginWithGitHub = async () => {
-    const auth = getAuth()
     const provider = new GithubAuthProvider()
 
     try {
+		// signInWithPopup calls automatically the onAuthStateChange() as callback
         const result = await signInWithPopup(auth, provider)
         // This gives you a GitHub Access Token. You can use it to access the GitHub API.
         const credential = GithubAuthProvider.credentialFromResult(result)
@@ -52,8 +53,6 @@ export const loginWithGitHub = async () => {
 
         // The signed-in user info.
         const user = result.user
-
-		return mapUserFromFirebaseAuth(user)
 
     } catch (err) {
         // Handle Errors here.

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { Disclosure, Switch } from '@headlessui/react'
-import { navigation } from '../configs'
-import logo from '../public/tweety.png'
+import { Disclosure } from '@headlessui/react'
+import RenderLinks from './RenderLinks'
+import Toggle from './Toggle'
 
 
 // Navbar of the app
-export default function Navbar() {
+export default function Navbar(props) {
+
+
     // DARK MODE
     const [darkMode, setDarkMode] = useState(false)
     const theme = darkMode ? 'dark' : 'light'
@@ -51,11 +52,16 @@ export default function Navbar() {
                             <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
                                 <Link href='/' passHref>
                                     <button className='flex-shrink-0 flex items-center w-11 h-auto relative rounded overflow-hidden'>
-										<Image src={logo} alt='logo' layout='fill' />
+										{ props.user
+											? <Image src={props.user.avatar} alt='avatar' layout='fill' />
+											: <Image src={'/tweety.png'} alt='logo' layout='fill' />
+										}
                                     </button>
                                 </Link>
                                 <div className='hidden sm:block sm:ml-6'>
-                                    <div className='flex space-x-4'>{render_links(navigation)}</div>
+                                    <div className='flex space-x-4'>
+										<RenderLinks />
+									</div>
                                 </div>
                             </div>
                             <div className='absolute right-0 flex'>
@@ -70,7 +76,9 @@ export default function Navbar() {
                     </div>
 
                     <Disclosure.Panel className='sm:hidden'>
-                        <div className='px-2 pt-2 pb-3 space-y-1'>{render_links(navigation)}</div>
+                        <div className='px-2 pt-2 pb-3 space-y-1'>
+							<RenderLinks />
+						</div>
                     </Disclosure.Panel>
                 </>
             )}
@@ -78,51 +86,5 @@ export default function Navbar() {
     )
 }
 
-// Links, used both in desktop and mobile view
-const render_links = (
-    navigation: {
-        name: string
-        url: string
-    }[],
-) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const router = useRouter()
 
-    return navigation.map((item, idx) => (
-        <Link href={item.url} key={idx} passHref>
-            <button
-                key={item.name}
-                className={
-                    'block px-3 py-2 rounded-md text-base font-medium ' +
-                    (router.pathname === item.url ? 'bg-zinc-900 text-white' : 'text-zinc-300 hover:bg-zinc-700 hover:text-white')
-                }
-            >
-                {item.name}
-            </button>
-        </Link>
-    ))
-}
 
-// Toggle to switch between dark and light mode
-const Toggle = ({ darkMode, setDarkMode }) => {
-    return (
-        <Switch
-            checked={darkMode}
-            onChange={setDarkMode}
-            className={
-                'relative inline-flex flex-shrink-0 h-[34px] w-[58px] border-2 dark:border-transparent border-orange-100 rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 bg-orange-50 dark:bg-zinc-900'
-            }
-        >
-            <span className='sr-only'>Use setting</span>
-            <span
-                aria-hidden='true'
-                className={`${
-                    darkMode ? 'translate-x-6 bg-zinc-700' : 'translate-x-0 bg-orange-200'
-                } pointer-events-none inline-block h-[30px] w-[30px]
-				rounded-full shadow-lg transform ring-0 transition ease-in-out duration-200 flex justify-center items-center`}
-            >
-                {darkMode ? <i className='bi bi-moon-fill text-white'></i> : <i className='bi bi-sun-fill text-black'></i>}
-            </span>
-        </Switch>
-    )
-}
