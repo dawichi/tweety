@@ -1,9 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Disclosure, Switch } from '@headlessui/react'
 import { navigation } from '../configs'
+import logo from '../public/tweety.png'
+
 
 // Navbar of the app
 export default function Navbar() {
@@ -48,9 +50,8 @@ export default function Navbar() {
                             </div>
                             <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
                                 <Link href='/' passHref>
-                                    <button className='flex-shrink-0 flex items-center'>
-                                        <img className='block h-8 w-auto' src='/favicon.svg' alt='Tweety' />
-                                        <h1 className='text-2xl text-white ml-2 hidden lg:block tracking-wider'>Tweety</h1>
+                                    <button className='flex-shrink-0 flex items-center w-11 h-auto relative rounded overflow-hidden'>
+										<Image src={logo} alt='logo' layout='fill' />
                                     </button>
                                 </Link>
                                 <div className='hidden sm:block sm:ml-6'>

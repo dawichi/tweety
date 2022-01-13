@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Footer, Navbar } from '../components'
 import { styles } from '../styles/styles.config'
 import 'tailwindcss/tailwind.css'
 import '../styles/global.scss'
+import { User } from '../configs/interfaces'
+import { UsersContext } from '../hooks/userContext'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+
+	// App context
+	const [user, setUser] = useState<User>()
+
     return (
         <>
             <Head>
@@ -24,7 +30,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </header>
 
             <main className={`pb-20 dark:text-white min-h-screen ${styles.background}`}>
-                <Component {...pageProps} />
+				<UsersContext.Provider value={{ user, setUser }}>
+	                <Component {...pageProps} />
+				</UsersContext.Provider>
             </main>
 
             <Footer />

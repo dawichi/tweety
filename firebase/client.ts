@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app'
-import { getAnalytics } from 'firebase/analytics'
-import { getAuth, GithubAuthProvider, signInWithPopup } from 'firebase/auth'
+import { getApps, initializeApp } from 'firebase/app'
+// import { getAnalytics } from 'firebase/analytics'
+import { getAuth, GithubAuthProvider, onAuthStateChanged, signInWithPopup } from 'firebase/auth'
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,8 +19,26 @@ const firebaseConfig = {
 }
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig)
-const analytics = getAnalytics(app)
+if (!getApps.length) {
+	const app = initializeApp(firebaseConfig)
+	// const analytics = getAnalytics(app)
+}
+
+
+const mapUserFromFirebaseAuth = (user: any) =>  ({
+	displayName: user.displayName,
+	username: user.reloadUserInfo.screenName,
+	email: user.email,
+	avatar: user.photoURL,
+})
+
+export const onAuthStateChange = (onChange) => {
+    const auth = getAuth()
+	return onAuthStateChanged(auth, user => {
+		const normalizedUser = mapUserFromFirebaseAuth(user)
+		onChange(normalizedUser)
+	})
+}
 
 export const loginWithGitHub = async () => {
     const auth = getAuth()
@@ -34,9 +52,9 @@ export const loginWithGitHub = async () => {
 
         // The signed-in user info.
         const user = result.user
-        // ...
 
-        return user
+		return mapUserFromFirebaseAuth(user)
+
     } catch (err) {
         // Handle Errors here.
         const errorCode = err.code
@@ -44,7 +62,7 @@ export const loginWithGitHub = async () => {
         // The email of the user's account used.
         const email = err.email
         // The AuthCredential type that was used.
-        const credential = GithubAuthProvider.credentialFromError(err)
+        // const credential = GithubAuthProvider.credentialFromError(err)
         // ...
     }
 }
