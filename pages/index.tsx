@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { UsersContext } from 'hooks/userContext'
 import { styles } from 'styles/styles.config'
-import { loginWithGitHub, onAuthStateChange } from 'configs/firebase/client'
+import { loginWithGitHub } from 'configs/firebase/client'
 
 const Home = () => {
     const { user, setUser } = useContext(UsersContext)
